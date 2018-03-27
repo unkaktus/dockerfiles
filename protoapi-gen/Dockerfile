@@ -1,6 +1,6 @@
 # Generate gogoproto gRPC stub, grpc-gateway stub
 # and swagger description from protofiles.
-# docker run --rm -ti -v /some/include:/proto-include-custom:ro -v $PWD:/root protoapi-gen *.proto
+# docker run --rm -ti -v /some/include:/proto-include-custom:ro -v $PWD:/proto protoapi-gen *.proto
 
 FROM golang:alpine
 RUN apk add --no-cache ca-certificates git
@@ -22,5 +22,5 @@ RUN mkdir /proto-include
 COPY --from=0 /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/ /proto-include
 COPY --from=0 /go/src/github.com/gogo/protobuf/protobuf/ /proto-include
 
-WORKDIR /root
+WORKDIR /proto
 ENTRYPOINT ["protoc", "-I/proto-include", "-I/proto-include-custom", "-I.", "--gofast_out=plugins=grpc:.", "--grpc-gateway_out=logtostderr=true:.", "--swagger_out=logtostderr=true:."]
